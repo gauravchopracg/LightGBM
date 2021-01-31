@@ -186,28 +186,5 @@ fi
 make _lightgbm -j4 || exit -1
 
 cd $BUILD_DIRECTORY/python-package && python setup.py install --precompile --user || exit -1
-pytest $BUILD_DIRECTORY/tests || exit -1
-
-if [[ $TASK == "regular" ]]; then
-    if [[ $PRODUCES_ARTIFACTS == "true" ]]; then
-        if [[ $OS_NAME == "macos" ]]; then
-            cp $BUILD_DIRECTORY/lib_lightgbm.so $BUILD_ARTIFACTSTAGINGDIRECTORY/lib_lightgbm.dylib
-        else
-            if [[ $COMPILER == "gcc" ]]; then
-                objdump -T $BUILD_DIRECTORY/lib_lightgbm.so > $BUILD_DIRECTORY/objdump.log || exit -1
-                python $BUILD_DIRECTORY/helpers/check_dynamic_dependencies.py $BUILD_DIRECTORY/objdump.log || exit -1
-            fi
-            cp $BUILD_DIRECTORY/lib_lightgbm.so $BUILD_ARTIFACTSTAGINGDIRECTORY/lib_lightgbm.so
-        fi
-    fi
-    cd $BUILD_DIRECTORY/examples/python-guide
-    sed -i'.bak' '/import lightgbm as lgb/a\
-import matplotlib\
-matplotlib.use\(\"Agg\"\)\
-' plot_example.py  # prevent interactive window mode
-    sed -i'.bak' 's/graph.render(view=True)/graph.render(view=False)/' plot_example.py
-    for f in *.py; do python $f || exit -1; done  # run all examples
-    cd $BUILD_DIRECTORY/examples/python-guide/notebooks
-    conda install -q -y -n $CONDA_ENV ipywidgets notebook
-    jupyter nbconvert --ExecutePreprocessor.timeout=180 --to notebook --execute --inplace *.ipynb || exit -1  # run all notebooks
-fi
+pytest $BUILD_DIRECTORY/tests/python_package_test/test_dask.py || exit -1
+pytest $BUILD_DIRECTORY/tests/python_package_test/test_sklearn.py || exit -1
