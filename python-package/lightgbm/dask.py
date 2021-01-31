@@ -457,7 +457,7 @@ class _DaskLGBMModel:
         params = self.get_params(True)
 
         model = _train(
-            client=self.client,
+            client=client,
             data=X,
             label=y,
             params=params,
