@@ -259,6 +259,8 @@ def _train(
     for param_alias in _ConfigAliases.get('machines', 'num_machines', 'num_threads'):
         params.pop(param_alias, None)
 
+    if client is None:
+        client = default_client()
     # Split arrays/dataframes into parts. Arrange parts into dicts to enforce co-locality
     data_parts = _split_to_parts(data=data, is_matrix=True)
     label_parts = _split_to_parts(data=label, is_matrix=False)
