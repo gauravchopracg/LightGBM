@@ -434,25 +434,6 @@ def _predict(
 
 class _DaskLGBMModel:
 
-    # self._client is set in the constructor of lightgbm.sklearn.LGBMModel
-    _client: Optional[Client] = None
-
-    @property
-    def client(self) -> Client:
-        """Dask client.
-
-        This property can be passed in the constructor or directly assigned
-        like ``model.set_params(client=client)``.
-        """
-        if self._client is None:
-            return default_client()
-        else:
-            return self._client
-
-    @client.setter
-    def client(self, client: Client) -> None:
-        self._client = client
-
     def _lgb_getstate(self) -> Dict[Any, Any]:
         """Remove un-picklable attributes before serialization."""
         client = self.__dict__.pop("_client", None)
@@ -502,8 +483,7 @@ class _DaskLGBMModel:
         attributes = source.__dict__
         extra_param_names = set(attributes.keys()).difference(params.keys())
         for name in extra_param_names:
-            if name != "_client":
-                setattr(dest, name, attributes[name])
+            setattr(dest, name, attributes[name])
 
 
 class DaskLGBMClassifier(LGBMClassifier, _DaskLGBMModel):
@@ -539,7 +519,7 @@ class DaskLGBMClassifier(LGBMClassifier, _DaskLGBMModel):
             importance_type=importance_type,
             **kwargs
         )
-        self.set_params(client=client)
+        self.client = client
 
     _base_doc = LGBMClassifier.__init__.__doc__
     _before_kwargs, _kwargs, _after_kwargs = _base_doc.partition('**kwargs')
@@ -638,7 +618,7 @@ class DaskLGBMRegressor(LGBMRegressor, _DaskLGBMModel):
             importance_type=importance_type,
             **kwargs
         )
-        self.set_params(client=client)
+        self.client = client
 
     _base_doc = LGBMRegressor.__init__.__doc__
     _before_kwargs, _kwargs, _after_kwargs = _base_doc.partition('**kwargs')
@@ -726,7 +706,7 @@ class DaskLGBMRanker(LGBMRanker, _DaskLGBMModel):
             importance_type=importance_type,
             **kwargs
         )
-        self.set_params(client=client)
+        self.client = client
 
     _base_doc = LGBMRanker.__init__.__doc__
     _before_kwargs, _kwargs, _after_kwargs = _base_doc.partition('**kwargs')
