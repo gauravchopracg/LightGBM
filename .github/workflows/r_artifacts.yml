@@ -44,7 +44,7 @@ jobs:
           )
           res_object <- rhub::check(
               path = package_tarball
-              , email = "lightgbm_test_email@maildrop.cc"
+              , email = "lightgbm_test_email@mailinator.com"
               , check_args = "--as-cran"
               , platform = c(
                   "solaris-x86-patched"
