@@ -47,8 +47,7 @@ jobs:
               , email = "lightgbm_test_email@mailinator.com"
               , check_args = "--as-cran"
               , platform = c(
-                  "solaris-x86-patched"
-                  , "solaris-x86-patched-ods"
+                  "windows-x86_64-oldrel"
               )
               , env_vars = c(
                   "R_COMPILE_AND_INSTALL_PACKAGES" = "always"
@@ -57,6 +56,7 @@ jobs:
                   , "_R_CHECK_PKG_SIZES_THRESHOLD_" = 60
               )
           )
+          res_object$livelog()
           statuses <- res_object[[".__enclos_env__"]][["private"]][["status_"]]
           result <- do.call(rbind, lapply(statuses, function(thisStatus) {
               data.frame(
