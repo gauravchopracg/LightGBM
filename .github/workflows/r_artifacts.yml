@@ -33,7 +33,7 @@ jobs:
           sh build-cran-package.sh || exit -1
           cat > run_rhub.R <<EOF
           package_tarball <- paste0("lightgbm_", readLines("VERSION.txt")[1], ".tar.gz")
-          install.packages('rhub', dependencies = TRUE, repos = 'https://cran.r-project.org')
+          install.packages('rhub', dependencies = c('Depends', 'Imports', 'LinkingTo'), repos = 'https://cran.r-project.org')
           rhub::validate_email(
               email = 'lightgbm_test_email@maildrop.cc'
               , token = '2b4aa567fbfa4b3584da21f3e4578baf'
