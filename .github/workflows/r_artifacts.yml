@@ -39,7 +39,7 @@ jobs:
           package_tarball <- paste0("lightgbm_", readLines("VERSION.txt")[1], ".tar.gz")
           install.packages('rhub', dependencies = c('Depends', 'Imports', 'LinkingTo'), repos = 'https://cran.r-project.org')
           rhub::validate_email(
-              email = 'lightgbm_test_email@maildrop.cc'
+              email = 'lightgbm_test_email@mailinator.com'
               , token = '2b4aa567fbfa4b3584da21f3e4578baf'
           )
           res_object <- rhub::check(
