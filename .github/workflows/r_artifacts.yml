@@ -31,6 +31,10 @@ jobs:
         id: build_package
         run: |
           sh build-cran-package.sh || exit -1
+          apt-get install --no-install-recommends -y \
+              libcurl4-openssl-dev \
+              libxml2-dev \
+              libssl-dev
           cat > run_rhub.R <<EOF
           package_tarball <- paste0("lightgbm_", readLines("VERSION.txt")[1], ".tar.gz")
           install.packages('rhub', dependencies = c('Depends', 'Imports', 'LinkingTo'), repos = 'https://cran.r-project.org')
