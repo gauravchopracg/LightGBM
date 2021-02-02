@@ -65,7 +65,6 @@ jobs:
                   , warnings = length(thisStatus[["result"]][["warnings"]])
                   , notes = length(thisStatus[["result"]][["notes"]])
                   , stringsAsFactors = FALSE
-                  , show_status = TRUE
               )
           }))
           print(result)
