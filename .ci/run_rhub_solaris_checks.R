@@ -30,7 +30,7 @@ res_object <- rhub::check(
     )
     , platform = c(
         "windows-x86_64-oldrel"
-        , "ubuntu-gcc-release"
+        , "solaris-x86-patched"
     )
     , env_vars = c(
         "R_COMPILE_AND_INSTALL_PACKAGES" = "always"
