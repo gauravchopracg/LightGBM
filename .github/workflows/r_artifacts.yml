@@ -36,8 +36,9 @@ jobs:
               libxml2-dev \
               libssl-dev
           check_succeeded="yes"
-          Rscript $GITHUB_WORKSPACE/.ci/run_rhub_solaris_checks.R $(pwd)/$(ls lightgbm_*.tar.gz | head -n1) $(pwd)/logs.txt || check_succeeded="no"
-          cat "(pwd)/logs.txt" || true
+          log_file="$(pwd)/logs.txt"
+          Rscript $GITHUB_WORKSPACE/.ci/run_rhub_solaris_checks.R "$(pwd)/$(ls lightgbm_*.tar.gz | head -n1)" $log_file || check_succeeded="no"
+          cat $log_file || true
           if [[ $check_succeeded == "no" ]]; then
               exit -1
           fi
