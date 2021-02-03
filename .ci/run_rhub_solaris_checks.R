@@ -3,7 +3,8 @@ args <- commandArgs(
 )
 package_tarball <- args[[1L]]
 log_file <- args[[2L]]
-
+print(package_tarball)
+print(log_file)
 install.packages('rhub', dependencies = c('Depends', 'Imports', 'LinkingTo'), repos = 'https://cran.r-project.org')
 
 email = c(
