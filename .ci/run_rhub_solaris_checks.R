@@ -3,8 +3,7 @@ args <- commandArgs(
 )
 package_tarball <- args[[1L]]
 log_file <- args[[2L]]
-print(package_tarball)
-print(log_file)
+
 install.packages('rhub', dependencies = c('Depends', 'Imports', 'LinkingTo'), repos = 'https://cran.r-project.org')
 
 email = c(
@@ -16,7 +15,8 @@ rhub::validate_email(
     , token = '6bc89147c8fc4824bce09f8454e4ab8e'
 )
 
-suppressMessages(
+invisible(
+    capture.output(
         res_object <- rhub::check(
             path = package_tarball
             , email = intToUtf8(email - 42L)
@@ -37,6 +37,7 @@ suppressMessages(
             , show_status = TRUE
         )
     )
+)
 statuses <- res_object[[".__enclos_env__"]][["private"]][["status_"]]
 result <- do.call(rbind, lapply(statuses, function(thisStatus) {
     data.frame(
