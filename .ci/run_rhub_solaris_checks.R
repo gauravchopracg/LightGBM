@@ -15,28 +15,30 @@ rhub::validate_email(
     , token = '6bc89147c8fc4824bce09f8454e4ab8e'
 )
 
-invisible(
-    capture.output(
-        res_object <- rhub::check(
-            path = package_tarball
-            , email = intToUtf8(email - 42L)
-            , check_args = c(
-                "--as-cran"
-                , "--no-manual"
-            )
-            , platform = c(
-                "windows-x86_64-oldrel"
-                , "ubuntu-gcc-release"
-            )
-            , env_vars = c(
-                "R_COMPILE_AND_INSTALL_PACKAGES" = "always"
-                , "_R_CHECK_SYSTEM_CLOCK_" = 0L
-                , "_R_CHECK_CRAN_INCOMING_REMOTE_" = 0L
-                , "_R_CHECK_PKG_SIZES_THRESHOLD_" = 60L
-            )
-            , show_status = TRUE
-        )
+if (Sys.info()['sysname'] == "Windows") {
+    null_file <- "NUL"
+} else {
+    null_file <- "/dev/null"
+}
+sink(file=null_file)
+res_object <- rhub::check(
+    path = package_tarball
+    , email = intToUtf8(email - 42L)
+    , check_args = c(
+        "--as-cran"
+        , "--no-manual"
     )
+    , platform = c(
+        "windows-x86_64-oldrel"
+        , "ubuntu-gcc-release"
+    )
+    , env_vars = c(
+        "R_COMPILE_AND_INSTALL_PACKAGES" = "always"
+        , "_R_CHECK_SYSTEM_CLOCK_" = 0L
+        , "_R_CHECK_CRAN_INCOMING_REMOTE_" = 0L
+        , "_R_CHECK_PKG_SIZES_THRESHOLD_" = 60L
+    )
+    , show_status = TRUE
 )
 statuses <- res_object[[".__enclos_env__"]][["private"]][["status_"]]
 result <- do.call(rbind, lapply(statuses, function(thisStatus) {
@@ -49,6 +51,7 @@ result <- do.call(rbind, lapply(statuses, function(thisStatus) {
         , stringsAsFactors = FALSE
     )
 }))
+sink()
 
 dir.create(dirname(log_file), recursive = TRUE, showWarnings = FALSE)
 for(i in 1L:nrow(result)) {
